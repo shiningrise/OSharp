@@ -129,12 +129,13 @@ namespace Liuliu.Demo.Web.Controllers
                 return new AjaxResult("提交信息验证失败", AjaxResultType.Error);
             }
 
-            if (!_verifyCodeService.CheckCode(dto.VerifyCode, dto.VerifyCodeId))
-            {
-                return new AjaxResult("验证码错误，请刷新重试", AjaxResultType.Error);
-            }
+            //if (!_verifyCodeService.CheckCode(dto.VerifyCode, dto.VerifyCodeId))
+            //{
+            //    return new AjaxResult("验证码错误，请刷新重试", AjaxResultType.Error);
+            //}
 
-            dto.UserName = dto.Email;
+            dto.UserName = dto.UserName;
+            dto.Email = dto.UserName + "@qq.com";
             dto.NickName = $"User_{new Random().NextLetterAndNumberString(8)}"; //随机用户昵称
             dto.RegisterIp = HttpContext.GetClientIp();
 
@@ -142,17 +143,17 @@ namespace Liuliu.Demo.Web.Controllers
 
             if (result.Succeeded)
             {
-                User user = result.Data;
-                string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = UrlBase64ReplaceChar(code);
-                string url = $"{Request.Scheme}://{Request.Host}/#/passport/confirm-email?userId={user.Id}&code={code}";
-                string body =
-                    $"亲爱的用户 <strong>{user.NickName}</strong>[{user.UserName}]，您好！<br>"
-                    + $"欢迎注册，激活邮箱请 <a href=\"{url}\" target=\"_blank\"><strong>点击这里</strong></a><br>"
-                    + $"如果上面的链接无法点击，您可以复制以下地址，并粘贴到浏览器的地址栏中打开。<br>"
-                    + $"{url}<br>"
-                    + $"祝您使用愉快！";
-                await SendMailAsync(user.Email, "柳柳软件 注册邮箱激活邮件", body);
+                //User user = result.Data;
+                //string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //code = UrlBase64ReplaceChar(code);
+                //string url = $"{Request.Scheme}://{Request.Host}/#/passport/confirm-email?userId={user.Id}&code={code}";
+                //string body =
+                //    $"亲爱的用户 <strong>{user.NickName}</strong>[{user.UserName}]，您好！<br>"
+                //    + $"欢迎注册，激活邮箱请 <a href=\"{url}\" target=\"_blank\"><strong>点击这里</strong></a><br>"
+                //    + $"如果上面的链接无法点击，您可以复制以下地址，并粘贴到浏览器的地址栏中打开。<br>"
+                //    + $"{url}<br>"
+                //    + $"祝您使用愉快！";
+                //await SendMailAsync(user.Email, "柳柳软件 注册邮箱激活邮件", body);
 
                 return result.ToAjaxResult(m => new { m.UserName, m.NickName, m.Email });
             }
